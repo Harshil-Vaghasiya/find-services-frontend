@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 import { Eye } from 'lucide-react'
 import { EyeSlash } from 'iconsax-react'
 import { useAuth } from '../auth/useAuth'
+import { getPostAuthPath } from '../auth/authRouting'
 import { AuthShell } from '../components/layout/AuthShell'
 import { Button } from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
@@ -42,9 +43,9 @@ export function SignupPage() {
         password: values.password,
       }
       const session = await registerMutation.mutateAsync(payload)
-      await setAuth(session)
+      const authedUser = await setAuth(session)
       toast.success('Account created')
-      navigate({ to: '/dashboard', replace: true })
+      navigate({ to: getPostAuthPath(authedUser), replace: true })
     } catch (err) {
       toast.error(getErrorMessage(err, 'Failed to create account'))
     }

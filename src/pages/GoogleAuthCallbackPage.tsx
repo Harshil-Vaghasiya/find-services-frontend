@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { useAuth } from '../auth/useAuth'
+import { getPostAuthPath } from '../auth/authRouting'
 import { Card } from '../components/ui/Card'
 
 const handledKey = (token: string) => `google-oauth-callback:${token}`
@@ -25,10 +26,10 @@ export function GoogleAuthCallbackPage() {
 
       void (async () => {
         try {
-          await setAuth({ accessToken })
+          const authedUser = await setAuth({ accessToken })
           window.history.replaceState({}, '', window.location.pathname)
           toast.success('Signed in with Google')
-          navigate({ to: '/dashboard', replace: true })
+          navigate({ to: getPostAuthPath(authedUser), replace: true })
         } catch {
           sessionStorage.removeItem(key)
           toast.error('Could not load your profile. Please try signing in again.')

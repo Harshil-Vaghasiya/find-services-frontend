@@ -14,6 +14,7 @@ import { getAccessToken } from './auth/authStorage'
 import { DashboardPage } from './pages/DashboardPage'
 import { GoogleAuthCallbackPage } from './pages/GoogleAuthCallbackPage'
 import { LoginPage } from './pages/LoginPage'
+import { ShopOnboardingPage } from './pages/ShopOnboardingPage'
 import { SignupPage } from './pages/SignupPage'
 
 function RootLayout() {
@@ -68,11 +69,23 @@ const dashboardRoute = createRoute({
   component: DashboardPage,
 })
 
+const onboardingRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/onboarding',
+  beforeLoad: () => {
+    if (!getAccessToken()) {
+      throw redirect({ to: '/login', replace: true })
+    }
+  },
+  component: ShopOnboardingPage,
+})
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   signupRoute,
   loginRoute,
   googleAuthCallbackRoute,
+  onboardingRoute,
   dashboardRoute,
 ])
 
